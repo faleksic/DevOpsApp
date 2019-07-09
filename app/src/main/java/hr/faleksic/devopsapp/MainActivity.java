@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     public void showNewScreen(View view) {
         Intent intent = new Intent(this, NewScreenActivity.class);
         EditText editText = findViewById(R.id.editText);
-        String message = editText.getText().toString();
+        String message = StringManipulator.convertToReverseUpperCase(editText.getText().toString());
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
