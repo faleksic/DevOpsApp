@@ -30,8 +30,6 @@ public class MainActivityTest {
         assertNotNull(activity);
     }
 
-
-
     @Test
     public void clickButtonAndTestStartingNextActivity() {
         Intent expectedIntent = new Intent(activity, NewScreenActivity.class);

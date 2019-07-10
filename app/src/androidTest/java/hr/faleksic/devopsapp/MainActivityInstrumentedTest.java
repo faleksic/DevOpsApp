@@ -1,6 +1,5 @@
 package hr.faleksic.devopsapp;
 
-import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.EditText;
