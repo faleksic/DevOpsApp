@@ -19,6 +19,9 @@ jobs:
             ./gradlew :app:assembleFullDebug
             ./gradlew :app:assembleAndroidTest
       - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - run:
           name: Store Google Service Account
           command: echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
       - run: |
@@ -27,15 +30,8 @@ jobs:
       - run:
           name: Test with Firebase Test Lab
           command: >
-            sudo gcloud firebase test android run --app <local_server_path>/<app_apk>.apk --test <local_server_path>/<app_test_apk>.apk
-      - run:
-          name: Install gsutil dependency and copy test results data
-          command: |
-            sudo pip install -U crcmod
-            sudo gsutil -m cp -r -U `sudo gsutil ls gs://[BUCKET_NAME]/[OBJECT_NAME] | tail -1` ${CIRCLE_ARTIFACTS}/ | true
-      - run:
-          name: Download Dependencies
-          command: ./gradlew androidDependencies
+            sudo gcloud firebase test android run --app ../app/build/outputs/apk/full/debug/app-full-debug.apk --test ../app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+      
       - save_cache:
           paths:
             - ~/.gradle
