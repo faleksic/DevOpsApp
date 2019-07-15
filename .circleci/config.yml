@@ -17,7 +17,7 @@ jobs:
           name: Build debug APK and release APK
           command: |
             ./gradlew :app:assembleDebug
-            ./gradlew :app:assembleDebugAndroidTest
+            ./gradlew :app:assembleAndroidTest
       - run: |
             sudo gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
             sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
