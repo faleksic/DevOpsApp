@@ -30,7 +30,7 @@ jobs:
       - run:
           name: Test with Firebase Test Lab
           command: >
-            sudo gcloud firebase test android run --app ../app/build/outputs/apk/full/debug/app-full-debug.apk --test ../app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+            sudo gcloud firebase test android run --app app/build/outputs/apk/full/debug/app-full-debug.apk --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
       
       - save_cache:
           paths:
