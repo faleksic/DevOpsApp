@@ -12,11 +12,14 @@ platform :android do
 
   desc "Assemble Build"
   lane :assemble_build do |options|
-    gradle(
-      task: "assemble",
-      build_type: @build_type,
-      flavor: @build_flavor
-    )
+    properties = {
+      "android.injected.signing.store.file" => "app/keystore.jks",
+      "android.injected.signing.store.password" => ENV['STORE_PASSWORD'],
+      "android.injected.signing.key.alias" => ENV['KEY_ALIAS'],
+      "android.injected.signing.key.password" => ENV['KEY_PASSWORD'],
+    } if @build_type == "Release"
+
+    gradle(task: "assemble", build_type: @build_type, flavor: @build_flavor, properties: properties)
   end
 
   desc "Assemble Test Application"
@@ -51,7 +54,8 @@ platform :android do
 
   desc "Deploy a new version to the Google Play"
   lane :deploy_to_play_store do
-    assemble_build release:true
+    @build_type = "Release"
+    assemble_build
     upload_to_play_store
   end
 

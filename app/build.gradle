@@ -18,14 +18,6 @@ apply plugin: 'io.fabric'
 
 
 android {
-    signingConfigs {
-        upload {
-            keyAlias 'upload'
-            keyPassword 'BruceWayne'
-            storeFile file('/Users/faleksic/keystores/upload-keystore')
-            storePassword 'BruceWayne'
-        }
-    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "hr.faleksic.devopsapp"
@@ -34,7 +26,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        signingConfig signingConfigs.upload
     }
     buildTypes {
         release {

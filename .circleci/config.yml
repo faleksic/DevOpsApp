@@ -46,11 +46,23 @@ references:
       paths:
         - ~/.gradle
         - ~/.m2
+
   save_gems_cache: &save_gems_cache
     save_cache:
       key: *gems_key
       paths:
         - vendor/bundle
+
+  decode_android_key: &decode_android_key
+    run:
+      name: Decode Android key store
+      command: echo $KEYSTORE | base64 -di | tee keystore.jks app/keystore.jks >/dev/null
+
+  create_google_play_key: &create_google_play_key
+    run:
+      name: Create Google Play key
+      command: echo $GOOGLE_PLAY_KEY > google-play-key.json
+    
 jobs:
   ## Run unit tests
   test_unit:
@@ -111,6 +123,28 @@ jobs:
       - run:
           name: Deploy to Crashlytics Beta
           command: bundle exec fastlane deploy_to_crashlytics
+
+  deploy_play_store:
+    <<: *android_config
+    steps:
+      - checkout
+      - *restore_gradle_cache
+      - *restore_gems_cache
+      - *ruby_dependencies
+      - *android_dependencies
+      - *save_gradle_cache
+      - *save_gems_cache
+      - *decode_android_key
+      - *create_google_play_key
+      - run:
+          name: Deploy to Play Store
+          command: bundle exec fastlane deploy_to_play_store
+      - store_artifacts:
+          path: app/build/outputs/apk/
+          destination: /apk/
+      - store_artifacts:
+          path: app/build/outputs/mapping/
+          destination: /mapping/
 
 workflows:
   version: 2
