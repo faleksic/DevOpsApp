@@ -72,6 +72,7 @@ platform :android do
 
   desc "Run instrumentation tests in Firebase Test Lab"
   lane :instrumentation_tests_testlab do
+    assemble release:false, demo:false
     run_tests_firebase_testlab(
       project_id: "devopsapp-d45e5",
       devices: [
