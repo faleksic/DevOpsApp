@@ -52,6 +52,7 @@ references:
       paths:
         - vendor/bundle
 jobs:
+  ## Run unit tests
   test_unit:
     <<: *android_config
     steps:
@@ -72,43 +73,44 @@ jobs:
         path: app/build/test-results/
         destination: /test-results/
 
+  ## Run instrumentation tests
   test_instrumentation:
-  <<: *android_config
-  steps:
-    - checkout
-    - *restore_gradle_cache
-    - *restore_gems_cache
-    - *ruby_dependencies
-    - *android_dependencies
-    - *save_gradle_cache
-    - *save_gems_cache
-    - run:
-        name: Uninstall crcmod
-        command: echo "y" | sudo pip uninstall crcmod
-    - run:
-        name: Install crcmod
-        command: sudo pip install -U crcmod
-    - run:
-        name: Run instrumentation tests in Firebase Test Lab
-        command: bundle exec fastlane instrumentation_tests_testlab
-    - store_artifacts:
-        path: firebase/
-        destination: /firebase/
-
-  
-deploy_crashlytics:
-  <<: *android_config
-  steps:
-    - checkout
-    - *restore_gradle_cache
-    - *restore_gems_cache
-    - *ruby_dependencies
-    - *android_dependencies
-    - *save_gradle_cache
-    - *save_gems_cache
-    - run:
-        name: Deploy to Crashlytics Beta
-        command: bundle exec fastlane deploy_to_crashlytics
+    <<: *android_config
+    steps:
+      - checkout
+      - *restore_gradle_cache
+      - *restore_gems_cache
+      - *ruby_dependencies
+      - *android_dependencies
+      - *save_gradle_cache
+      - *save_gems_cache
+      - run:
+          name: Uninstall crcmod
+          command: echo "y" | sudo pip uninstall crcmod
+      - run:
+          name: Install crcmod
+          command: sudo pip install -U crcmod
+      - run:
+          name: Run instrumentation tests in Firebase Test Lab
+          command: bundle exec fastlane instrumentation_tests_testlab
+      - store_artifacts:
+          path: firebase/
+          destination: /firebase/
+        
+  ## Deploy to Crashlytics Beta
+  deploy_crashlytics:
+    <<: *android_config
+    steps:
+      - checkout
+      - *restore_gradle_cache
+      - *restore_gems_cache
+      - *ruby_dependencies
+      - *android_dependencies
+      - *save_gradle_cache
+      - *save_gems_cache
+      - run:
+          name: Deploy to Crashlytics Beta
+          command: bundle exec fastlane deploy_to_crashlytics
 
 workflows:
   version: 2
