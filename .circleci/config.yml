@@ -43,7 +43,11 @@ references:
       paths:
         - ~/.gradle
         - ~/.m2
-
+  save_gems_cache: &save_gems_cache
+    save_cache:
+      key: *gems_key
+      paths:
+        - vendor/bundle
 jobs:
   test_unit:
     <<: *android_config
