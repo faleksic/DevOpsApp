@@ -4,14 +4,17 @@ references:
   ## Workspaces
   workspace: &workspace
     ~/src
+
+  ## Docker image configurations
   android_config: &android_config
-  working_directory: *workspace
-  docker:
-    - image: circleci/android:api-28
-  environment:
-    TERM: dumb
-    _JAVA_OPTIONS: "-Xmx2048m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
-    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m"'
+    working_directory: *workspace
+    docker:
+      - image: circleci/android:api-28
+    environment:
+      TERM: dumb
+      _JAVA_OPTIONS: "-Xmx2048m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m"'
+
   ## Dependencies
   ruby_dependencies: &ruby_dependencies
     run:
