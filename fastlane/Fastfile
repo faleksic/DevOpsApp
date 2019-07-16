@@ -1,23 +1,7 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
-
 default_platform(:android)
 
 platform :android do
   before_all do|lane, options|
-    setup_circle_ci
     @build_type = "Debug"
     @build_flavor = "Full"
     if not options.empty?
@@ -52,22 +36,22 @@ platform :android do
 
   desc "Run unit tests"
   lane :unit_tests do |options|
-    gradle(task: "test", build_type: @build_type)
+    gradle(
+      task: "test", 
+      build_type: @build_type, 
+      flavor: @build_flavor
+      )
   end
 
   desc "Submit a new Beta Build to Crashlytics"
   lane :beta do
-    gradle(
-      task: 'assemble',
-      flavor: 'full',
-      build_type: 'release'
-    )
+    assemble release:true, demo:false
     crashlytics
   end
 
   desc "Deploy a new version to the Google Play"
-  lane :deploy do
-    gradle(task: "clean assembleRelease")
+  lane :deploy_to_play_store do
+    assemble_build release:true
     upload_to_play_store
   end
 
