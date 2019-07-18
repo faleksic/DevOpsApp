@@ -1,0 +1,94 @@
+default_platform(:android)
+
+platform :android do
+  before_all do|lane, options|
+    @build_type = "Debug"
+    @build_flavor = "Full"
+    if not options.empty?
+      @build_type = options[:release] ? "Release" : "Debug"
+      @build_flavor = options[:demo] ? "Demo" : "Full"
+    end
+  end
+
+  desc "Assemble Build"
+  lane :assemble_build do |options|
+    properties = {
+      "android.injected.signing.store.file" => "app/keystore.jks",
+      "android.injected.signing.store.password" => ENV['STORE_PASSWORD'],
+      "android.injected.signing.key.alias" => ENV['KEY_ALIAS'],
+      "android.injected.signing.key.password" => ENV['KEY_PASSWORD'],
+    } if @build_type == "Release"
+
+    gradle(task: "assemble", build_type: @build_type, flavor: @build_flavor, properties: properties)
+  end
+
+  desc "Assemble Test Application"
+  lane :assemble_test_application do
+    gradle(
+      task: "assemble",
+      build_type: @build_type + "AndroidTest",
+      flavor: @build_flavor
+      )
+  end
+
+  desc "Assemble Build and Test Application"
+  lane :assemble do
+    assemble_build
+    assemble_test_application
+  end
+
+  desc "Run unit tests"
+  lane :unit_tests do |options|
+    gradle(
+      task: "test", 
+      build_type: @build_type, 
+      flavor: @build_flavor
+      )
+  end
+
+  desc "Submit a new Beta Build to Crashlytics"
+  lane :beta do
+    assemble release:true, demo:false
+    crashlytics
+  end
+
+  desc "Deploy a new version to the Google Play"
+  lane :deploy_to_play_store do
+    @build_type = "Release"
+    assemble_build
+    upload_to_play_store
+  end
+
+  desc "Build debug and test APK for screenshots"
+  lane :build_for_screengrab do
+    gradle(
+      task: 'clean'
+    )
+    build_android_app(
+      task: 'assemble',
+      build_type: 'Debug'
+    )
+    build_android_app(
+      task: 'assemble',
+      build_type: 'AndroidTest'
+    )
+  end
+
+  desc "Run instrumentation tests in Firebase Test Lab"
+  lane :instrumentation_tests_testlab do
+    assemble release:false, demo:false
+    run_tests_firebase_testlab(
+      project_id: "devopsapp-d45e5",
+      devices: [
+        {
+          model: "Nexus6P",
+          version: "27"
+        }
+      ],
+      app_apk: "app/build/outputs/apk/full/debug/app-full-debug.apk",
+      android_test_apk: "app/build/outputs/apk/androidTest/full/debug/app-full-debug-androidTest.apk",
+      delete_firebase_files: true
+    )
+  end
+  
+end

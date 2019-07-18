@@ -82,3 +82,29 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
+# fastlane specific
+**/fastlane/report.xml
+
+# deliver temporary files
+**/fastlane/Preview.html
+
+# snapshot generated screenshots
+**/fastlane/screenshots
+
+# scan temporary files
+**/fastlane/test_output
+
+**/fastlane/metadata
+
+**/firebase
+
+.env
+
+instrumentation_output.txt
+
+app/fabric.properties
+
+client-secret.json
+
+.ruby-version
