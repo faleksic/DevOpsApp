@@ -158,7 +158,7 @@ workflows:
           filters:
             branches:
               only:
-                - beta
+                - /release-.*/
           requires:
             - test_unit
             - test_instrumentation
@@ -166,7 +166,7 @@ workflows:
           filters:
             branches:
               only:
-                - production
+                - master
           requires:
             - test_unit
             - test_instrumentation
