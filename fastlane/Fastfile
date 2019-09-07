@@ -48,7 +48,7 @@ platform :android do
 
   desc "Submit a new Beta Build to Crashlytics"
   lane :beta do
-    assemble release:true, demo:false
+    assemble release:false, demo:false
     crashlytics(
        api_token: 'b3fb65bde48674aab20a8731cee37bcd18758ab2',
        build_secret: '1115dc17cc77ce0fedaba8e4ec9d035ed9a1184491feb533eb2c0aa779d511f2'
